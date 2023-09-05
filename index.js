@@ -24,9 +24,10 @@ const main = () => {
         const finalBranchName = branchName.trim() || defaultBranchName;
 
         execSync(`git add . && git commit -m "${finalCommitMessage}" && git push origin ${finalBranchName}`);
-        console.log(chalk.bgGreen("Git added, committed, and pushed, bro!"));
+
+        console.log(chalk.bgGreen.white("Git added, committed, and pushed, bro!"));
       } catch (error) {
-        console.error(`Error executing git commands: ${error.message}`);
+        console.error(`${chalk.bgRed.white("Error executing git commands:")} ${error.message}`);
       }
     });
   });
