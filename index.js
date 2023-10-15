@@ -7,13 +7,24 @@ import autocomplete from "inquirer-autocomplete-prompt";
 
 inquirer.registerPrompt("autocomplete", autocomplete);
 
-const displayGitStatus = () => {
+
+const displayModifiedFiles = () => {
   try {
-    const statusOutput = execSync("git status").toString();
-    console.log(chalk.bgCyan.white.bold("Git Status:"));
-    console.log(statusOutput);
+    const statusOutput = execSync("git status --short").toString();
+    const modifiedFiles = statusOutput
+      .split('\n')
+      .filter(line => line.startsWith(' M '))
+      .map(line => line.replace(' M ', ''))
+      .join('\n');
+
+    if (modifiedFiles) {
+      console.log(chalk.bgCyan.white.bold("Modified Files:"));
+      console.log(modifiedFiles);
+    } else {
+      console.log(chalk.bgGreen.white.bold("No modified files."));
+    }
   } catch (error) {
-    console.error(`${chalk.bgRed.white("Error executing git status:")} ${error.message}`);
+    console.error(`${chalk.bgRed.white.bold("Error executing git status:")} ${error.message}`);
   }
 };
 
@@ -22,7 +33,7 @@ const main = async () => {
   console.log(chalk.green(figlet.textSync("Jutsu-Git" , {horizontalLayout: "full"})));
 
   try {
-    displayGitStatus();
+    displayModifiedFiles();
 
     const branches = execSync("git branch --list")
       .toString()
@@ -57,7 +68,7 @@ const main = async () => {
 
     console.log(chalk.red("Branch: ") + chalk.cyan(finalBranchName));
 
-    console.log(chalk.green(figlet.textSync("WAIT BRO!" , {horizontalLayout: "full"})));
+    console.log(chalk.green(figlet.textSync("Wait Bro!" , {horizontalLayout: "full"})));
 
     try {
       execSync(`git add . && git commit -m "${finalCommitMessage}" && git push origin ${finalBranchName}`);
