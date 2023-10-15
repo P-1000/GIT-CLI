@@ -57,7 +57,7 @@ const main = async () => {
 
     console.log(chalk.red("Branch: ") + chalk.cyan(finalBranchName));
 
-    console.log(chalk.yellow("Committing changes..."));
+    console.log(chalk.green(figlet.textSync("WAIT BRO!" , {horizontalLayout: "full"})));
 
     try {
       execSync(`git add . && git commit -m "${finalCommitMessage}" && git push origin ${finalBranchName}`);
