@@ -55,6 +55,8 @@ const main = async () => {
     const defaultCommitMessage = "Default commit message";
     const finalCommitMessage = commitMessage.trim() || defaultCommitMessage;
 
+    console.log(chalk.red("Branch: ") + chalk.cyan(finalBranchName));
+
     console.log(chalk.yellow("Committing changes..."));
 
     try {
