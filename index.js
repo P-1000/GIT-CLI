@@ -19,6 +19,7 @@ const displayGitStatus = () => {
 
 const main = async () => {
   // console.log(chalk.green(figlet.textSync("Jutsu-Git", { horizontalLayout: "full" }));
+  console.log(chalk.green(figlet.textSync("Jutsu-Git" , {horizontalLayout: "full"})));
 
   try {
     displayGitStatus();
