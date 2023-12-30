@@ -98,6 +98,8 @@ const displayLoadingAnimation = () => {
   }, 100);
 };
 
+// ...
+
 const main = async () => {
   console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
 
@@ -123,19 +125,19 @@ const main = async () => {
       const addLoadingInterval = displayLoadingAnimation();
       executeCommand('git add .');
       clearInterval(addLoadingInterval);
-      console.log(chalk.bgGreen.white.bold('Git add completed successfully! Staged changes for commit.'));
+      console.log(chalk.bgGreen.black.bold('Git add completed successfully! Staged changes for commit.'));
 
       // Step 2: Git Commit
       const commitLoadingInterval = displayLoadingAnimation();
       executeCommand(`git commit -m "${finalCommitMessage}"`);
       clearInterval(commitLoadingInterval);
-      console.log(chalk.bgGreen.white.bold('Git commit completed successfully! Created a new commit with the staged changes.'));
+      console.log(chalk.bgBlue.white.bold('Git commit completed successfully! Created a new commit with the staged changes.'));
 
       // Step 3: Git Push
       const pushLoadingInterval = displayLoadingAnimation();
       executeCommand(`git push origin ${encodeURIComponent(finalBranchName)}`);
       clearInterval(pushLoadingInterval);
-      console.log(chalk.bgGreen.white.bold('Git push completed successfully! Pushed the new commit to the remote repository.'));
+      console.log(chalk.bgMagenta.white.bold('Git push completed successfully! Pushed the new commit to the remote repository.'));
     } catch (error) {
       console.error(`${chalk.bgRed.white.bold('Error executing git commands:')} ${error.message}`);
     }
@@ -143,5 +145,8 @@ const main = async () => {
     console.error(`${chalk.bgRed.white('Error executing script:')} ${error.message}`);
   }
 };
+
+main();
+
 
 main();
