@@ -36,6 +36,23 @@ const displayModifiedFiles = () => {
   }
 };
 
+// ...
+
+const displayFileDiffs = () => {
+  try {
+    const diffOutput = executeCommand('git diff | less -R');
+    
+    if (!diffOutput) {
+      console.log(chalk.bgGreen.white.bold('No changes to be committed.'));
+    }
+  } catch (error) {
+    console.error(`${chalk.bgRed.white.bold('Error executing git diff:')} ${error.message}`);
+  }
+};
+
+// ...
+
+
 const promptForBranchAndCommit = async () => {
   try {
     const branches = executeCommand('git branch --list')
@@ -65,23 +82,6 @@ const promptForBranchAndCommit = async () => {
     return await branchPrompt;
   } catch (error) {
     throw new Error(`Error prompting for branch and commit: ${error.message}`);
-  }
-};
-
-// ...
-
-const displayFileDiffs = () => {
-  try {
-    const diffOutput = executeCommand('git diff');
-    
-    if (diffOutput) {
-      console.log(chalk.bgYellow.black.bold('Changes to be committed:'));
-      console.log(diffOutput);
-    } else {
-      console.log(chalk.bgGreen.white.bold('No changes to be committed.'));
-    }
-  } catch (error) {
-    console.error(`${chalk.bgRed.white.bold('Error executing git diff:')} ${error.message}`);
   }
 };
 
@@ -119,9 +119,5 @@ const main = async () => {
     console.error(`${chalk.bgRed.white('Error executing script:')} ${error.message}`);
   }
 };
-
-// ...
-
-
 
 main();
