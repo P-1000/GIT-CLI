@@ -85,13 +85,24 @@ const promptForBranchAndCommit = async () => {
   }
 };
 
+
+const displayLoadingAnimation = () => {
+  const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+  let currentFrame = 0;
+
+  return setInterval(() => {
+    process.stdout.write(chalk.green(frames[currentFrame] + ' Working... \r'));
+    currentFrame = (currentFrame + 1) % frames.length;
+  }, 100);
+};
+
 const main = async () => {
   console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
 
   try {
     displayModifiedFiles();
     
-    
+    // Display file differences before committing
     displayFileDiffs();
 
     const { branch, commitMessage } = await promptForBranchAndCommit();
@@ -106,12 +117,23 @@ const main = async () => {
     console.log(chalk.green(figlet.textSync('Wait Bro!', { horizontalLayout: 'full' })));
 
     try {
+      // Step 1: Git Add
+      const addLoadingInterval = displayLoadingAnimation();
       executeCommand('git add .');
-      executeCommand(`git commit -m "${finalCommitMessage}"`);
+      clearInterval(addLoadingInterval);
+      console.log(chalk.bgGreen.white.bold('Git add completed successfully!'));
 
-      // Use proper shell escaping for the branch name
+      // Step 2: Git Commit
+      const commitLoadingInterval = displayLoadingAnimation();
+      executeCommand(`git commit -m "${finalCommitMessage}"`);
+      clearInterval(commitLoadingInterval);
+      console.log(chalk.bgGreen.white.bold('Git commit completed successfully!'));
+
+      // Step 3: Git Push
+      const pushLoadingInterval = displayLoadingAnimation();
       executeCommand(`git push origin ${encodeURIComponent(finalBranchName)}`);
-      console.log(chalk.bgGreen.white.bold('Git added, committed, and pushed successfully!'));
+      clearInterval(pushLoadingInterval);
+      console.log(chalk.bgGreen.white.bold('Git push completed successfully!'));
     } catch (error) {
       console.error(`${chalk.bgRed.white.bold('Error executing git commands:')} ${error.message}`);
     }
