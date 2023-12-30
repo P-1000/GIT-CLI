@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import chalk from 'chalk';
 import figlet from 'figlet';
-import { execSync } from 'child_process';
 import inquirer from 'inquirer';
-import autocomplete from 'inquirer-autocomplete-prompt';
+import CLI from 'clui';
+import { execSync } from 'child_process';
 
-inquirer.registerPrompt('autocomplete', autocomplete);
+const Spinner = CLI.Spinner;
 
 const executeCommand = (command) => {
   try {
@@ -36,12 +36,10 @@ const displayModifiedFiles = () => {
   }
 };
 
-// ...
-
 const displayFileDiffs = () => {
   try {
     const diffOutput = executeCommand('git diff | less -R');
-    
+
     if (!diffOutput) {
       console.log(chalk.bgGreen.white.bold('No changes to be committed.'));
     }
@@ -50,16 +48,13 @@ const displayFileDiffs = () => {
   }
 };
 
-// ...
-
-
 const promptForBranchAndCommit = async () => {
   try {
     const branches = executeCommand('git branch --list')
       .split('\n')
       .map((branch) => branch.trim());
 
-    const branchPrompt = inquirer.prompt([
+    const questions = [
       {
         type: 'autocomplete',
         name: 'branch',
@@ -77,32 +72,13 @@ const promptForBranchAndCommit = async () => {
         name: 'commitMessage',
         message: 'Enter commit message (or press Enter for default):',
       },
-    ]);
+    ];
 
-    return await branchPrompt;
+    return await inquirer.prompt(questions);
   } catch (error) {
     throw new Error(`Error prompting for branch and commit: ${error.message}`);
   }
 };
-
-
-// ...
-
-const displayLoadingAnimation = () => {
-  const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
-  let currentFrame = 0;
-
-  return setInterval(() => {
-    process.stdout.write(chalk.green(frames[currentFrame] + ' Working... \r'));
-    currentFrame = (currentFrame + 1) % frames.length;
-  }, 100);
-};
-
-// ...
-
-// ...
-
-// ...
 
 const displayCommitHistory = () => {
   try {
@@ -117,6 +93,12 @@ const displayCommitHistory = () => {
   } catch (error) {
     console.error(`${chalk.bgRed.white.bold('Error retrieving commit history:')} ${error.message}`);
   }
+};
+
+const displayLoadingAnimation = (message) => {
+  const status = new Spinner(message);
+  status.start();
+  return status;
 };
 
 const main = async () => {
@@ -144,21 +126,21 @@ const main = async () => {
 
     try {
       // Step 1: Git Add
-      const addLoadingInterval = displayLoadingAnimation();
+      const addLoading = displayLoadingAnimation('Staging changes...');
       executeCommand('git add .');
-      clearInterval(addLoadingInterval);
+      addLoading.stop();
       console.log(chalk.bgGreen.black.bold('Git add completed successfully! Staged changes for commit.'));
 
       // Step 2: Git Commit
-      const commitLoadingInterval = displayLoadingAnimation();
+      const commitLoading = displayLoadingAnimation('Creating a new commit...');
       executeCommand(`git commit -m "${finalCommitMessage}"`);
-      clearInterval(commitLoadingInterval);
+      commitLoading.stop();
       console.log(chalk.bgBlue.white.bold('Git commit completed successfully! Created a new commit with the staged changes.'));
 
       // Step 3: Git Push
-      const pushLoadingInterval = displayLoadingAnimation();
+      const pushLoading = displayLoadingAnimation('Pushing to remote repository...');
       executeCommand(`git push origin ${encodeURIComponent(finalBranchName)}`);
-      clearInterval(pushLoadingInterval);
+      pushLoading.stop();
       console.log(chalk.bgMagenta.white.bold.underline('Git push completed successfully! Pushed the new commit to the remote repository.'));
     } catch (error) {
       console.error(`${chalk.bgRed.white.bold('Error executing git commands:')} ${error.message}`);
@@ -169,7 +151,3 @@ const main = async () => {
 };
 
 main();
-
-
-
-

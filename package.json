@@ -13,6 +13,7 @@
   "dependencies": {
     "chalk": "^5.2.0",
     "chalk-animation": "^2.0.3",
+    "clui": "^0.3.6",
     "enquirer": "^2.4.1",
     "execa": "^7.1.1",
     "figlet": "^1.6.0",
