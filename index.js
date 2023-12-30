@@ -100,6 +100,8 @@ const displayLoadingAnimation = () => {
 
 // ...
 
+// ...
+
 const main = async () => {
   console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
 
@@ -137,7 +139,7 @@ const main = async () => {
       const pushLoadingInterval = displayLoadingAnimation();
       executeCommand(`git push origin ${encodeURIComponent(finalBranchName)}`);
       clearInterval(pushLoadingInterval);
-      console.log(chalk.bgMagenta.white.bold('Git push completed successfully! Pushed the new commit to the remote repository.'));
+      console.log(chalk.bgMagenta.white.bold.underline('Git push completed successfully! Pushed the new commit to the remote repository.'));
     } catch (error) {
       console.error(`${chalk.bgRed.white.bold('Error executing git commands:')} ${error.message}`);
     }
@@ -145,6 +147,9 @@ const main = async () => {
     console.error(`${chalk.bgRed.white('Error executing script:')} ${error.message}`);
   }
 };
+
+
+
 
 main();
 
