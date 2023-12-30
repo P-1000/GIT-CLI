@@ -70,11 +70,29 @@ const promptForBranchAndCommit = async () => {
 
 // ...
 
+const displayFileDiffs = () => {
+  try {
+    const diffOutput = executeCommand('git diff');
+    
+    if (diffOutput) {
+      console.log(chalk.bgYellow.black.bold('Changes to be committed:'));
+      console.log(diffOutput);
+    } else {
+      console.log(chalk.bgGreen.white.bold('No changes to be committed.'));
+    }
+  } catch (error) {
+    console.error(`${chalk.bgRed.white.bold('Error executing git diff:')} ${error.message}`);
+  }
+};
+
 const main = async () => {
   console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
 
   try {
     displayModifiedFiles();
+    
+    // Display file differences before committing
+    displayFileDiffs();
 
     const { branch, commitMessage } = await promptForBranchAndCommit();
 
@@ -91,7 +109,7 @@ const main = async () => {
       executeCommand('git add .');
       executeCommand(`git commit -m "${finalCommitMessage}"`);
 
-     
+      // Use proper shell escaping for the branch name
       executeCommand(`git push origin ${encodeURIComponent(finalBranchName)}`);
       console.log(chalk.bgGreen.white.bold('Git added, committed, and pushed successfully!'));
     } catch (error) {
@@ -101,6 +119,9 @@ const main = async () => {
     console.error(`${chalk.bgRed.white('Error executing script:')} ${error.message}`);
   }
 };
+
+// ...
+
 
 
 main();
