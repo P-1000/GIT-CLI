@@ -91,7 +91,7 @@ const main = async () => {
   try {
     displayModifiedFiles();
     
-    // Display file differences before committing
+    
     displayFileDiffs();
 
     const { branch, commitMessage } = await promptForBranchAndCommit();
