@@ -86,6 +86,8 @@ const promptForBranchAndCommit = async () => {
 };
 
 
+// ...
+
 const displayLoadingAnimation = () => {
   const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
   let currentFrame = 0;
@@ -95,7 +97,6 @@ const displayLoadingAnimation = () => {
     currentFrame = (currentFrame + 1) % frames.length;
   }, 100);
 };
-// ...
 
 const main = async () => {
   console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
@@ -142,8 +143,5 @@ const main = async () => {
     console.error(`${chalk.bgRed.white('Error executing script:')} ${error.message}`);
   }
 };
-
-main();
-
 
 main();
