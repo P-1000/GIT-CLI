@@ -68,6 +68,8 @@ const promptForBranchAndCommit = async () => {
   }
 };
 
+// ...
+
 const main = async () => {
   console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
 
@@ -89,8 +91,8 @@ const main = async () => {
       executeCommand('git add .');
       executeCommand(`git commit -m "${finalCommitMessage}"`);
 
-      // Use quotes around ${finalBranchName} to handle branch names with special characters
-      executeCommand(`git push origin "${finalBranchName}"`);
+      // Use the branch name directly without quotes
+      executeCommand(`git push origin ${finalBranchName}`);
       console.log(chalk.bgGreen.white.bold('Git added, committed, and pushed successfully!'));
     } catch (error) {
       console.error(`${chalk.bgRed.white.bold('Error executing git commands:')} ${error.message}`);
@@ -99,5 +101,8 @@ const main = async () => {
     console.error(`${chalk.bgRed.white('Error executing script:')} ${error.message}`);
   }
 };
+
+// ...
+
 
 main();
