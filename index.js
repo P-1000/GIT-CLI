@@ -111,7 +111,7 @@ const main = async () => {
     displayFileDiffs();
 
     // Display commit history
-    displayCommitHistory();
+    // displayCommitHistory();
 
     const { branch, commitMessage } = await promptForBranchAndCommit();
 
