@@ -86,9 +86,11 @@ const main = async () => {
     console.log(chalk.green(figlet.textSync('Wait Bro!', { horizontalLayout: 'full' })));
 
     try {
-      executeCommand(`git add .`);
+      executeCommand('git add .');
       executeCommand(`git commit -m "${finalCommitMessage}"`);
-      executeCommand(`git push origin ${finalBranchName}`);
+
+      // Use quotes around ${finalBranchName} to handle branch names with special characters
+      executeCommand(`git push origin "${finalBranchName}"`);
       console.log(chalk.bgGreen.white.bold('Git added, committed, and pushed successfully!'));
     } catch (error) {
       console.error(`${chalk.bgRed.white.bold('Error executing git commands:')} ${error.message}`);
