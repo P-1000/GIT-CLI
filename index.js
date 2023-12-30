@@ -36,7 +36,7 @@ const displayModifiedFiles = () => {
   }
 };
 
-// ...
+
 
 const displayFileDiffs = () => {
   try {
@@ -86,8 +86,6 @@ const promptForBranchAndCommit = async () => {
 };
 
 
-// ...
-
 const displayLoadingAnimation = () => {
   const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
   let currentFrame = 0;
@@ -98,11 +96,7 @@ const displayLoadingAnimation = () => {
   }, 100);
 };
 
-// ...
 
-// ...
-
-// ...
 
 const displayCommitHistory = () => {
   try {
@@ -143,19 +137,19 @@ const main = async () => {
     console.log(chalk.green(figlet.textSync('Wait Bro!', { horizontalLayout: 'full' })));
 
     try {
-      // Step 1: Git Add
+      //  Git Add
       const addLoadingInterval = displayLoadingAnimation();
       executeCommand('git add .');
       clearInterval(addLoadingInterval);
       console.log(chalk.bgGreen.black.bold('Git add completed successfully! Staged changes for commit.'));
 
-      // Step 2: Git Commit
+      //  Git Commit
       const commitLoadingInterval = displayLoadingAnimation();
       executeCommand(`git commit -m "${finalCommitMessage}"`);
       clearInterval(commitLoadingInterval);
       console.log(chalk.bgBlue.white.bold('Git commit completed successfully! Created a new commit with the staged changes.'));
 
-      // Step 3: Git Push
+      // Git Push
       const pushLoadingInterval = displayLoadingAnimation();
       executeCommand(`git push origin ${encodeURIComponent(finalBranchName)}`);
       clearInterval(pushLoadingInterval);
