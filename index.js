@@ -102,6 +102,23 @@ const displayLoadingAnimation = () => {
 
 // ...
 
+// ...
+
+const displayCommitHistory = () => {
+  try {
+    const commitHistory = executeCommand('git log --oneline --decorate --graph');
+
+    if (commitHistory) {
+      console.log(chalk.bgYellow.black.bold('Commit History:'));
+      console.log(commitHistory);
+    } else {
+      console.log(chalk.bgGreen.white.bold('No commit history.'));
+    }
+  } catch (error) {
+    console.error(`${chalk.bgRed.white.bold('Error retrieving commit history:')} ${error.message}`);
+  }
+};
+
 const main = async () => {
   console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
 
@@ -110,6 +127,9 @@ const main = async () => {
 
     // Display file differences before committing
     displayFileDiffs();
+
+    // Display commit history
+    displayCommitHistory();
 
     const { branch, commitMessage } = await promptForBranchAndCommit();
 
@@ -148,10 +168,8 @@ const main = async () => {
   }
 };
 
-
-
-
 main();
+
 
 
 
