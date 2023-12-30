@@ -91,8 +91,8 @@ const main = async () => {
       executeCommand('git add .');
       executeCommand(`git commit -m "${finalCommitMessage}"`);
 
-      // Use the branch name directly without quotes
-      executeCommand(`git push origin ${finalBranchName}`);
+      // Use proper shell escaping for the branch name
+      executeCommand(`git push origin ${encodeURIComponent(finalBranchName)}`);
       console.log(chalk.bgGreen.white.bold('Git added, committed, and pushed successfully!'));
     } catch (error) {
       console.error(`${chalk.bgRed.white.bold('Error executing git commands:')} ${error.message}`);
