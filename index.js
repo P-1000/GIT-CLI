@@ -73,7 +73,7 @@ const main = async () => {
     const commitMessageFromAI = await getCommitMessage(diffInput);
 
     // Git Commit
-    executeCommand(`git commit -m "${commitMessageFromAI || commitMessage ? commitMessageFromAI || commitMessage : 'Jutsu-Git Commit'}"`);
+    executeCommand(`git commit -m "${commitMessageFromAI }"`);
     console.log(chalk.blue('Committed changes.'));
 
     // Git Push
