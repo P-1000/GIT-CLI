@@ -77,7 +77,7 @@ const main = async () => {
     console.log(chalk.blue('Committed changes.'));
 
     // Git Push
-    executeCommand(`git push origin ${encodeURIComponent(branch)}`);
+    executeCommand(`git push origin ${branch}`);
     console.log(chalk.magenta(`Pushed changes to branch ${branch}.`));
 
     console.log(chalk.green('Done!'));
