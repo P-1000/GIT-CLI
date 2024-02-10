@@ -40,7 +40,9 @@ async function getCommitMessage(diffinput) {
   const result = await model.generateContent(prompt);
   const response = await result.response;
   const text = response.text();
+  console.log(" ");
   console.log(chalk.bgBlack.white.bold(`AI Generated Commit Message:\n${text}`));
+    console.log(" ");
 }
 
 export default getCommitMessage;
