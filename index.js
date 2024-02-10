@@ -46,7 +46,7 @@ const selectBranchAndCommit = async () => {
       {
         type: 'input',
         name: 'commitMessage',
-        message: 'Enter commit message:',
+        message: 'Enter commit message (Press Enter and AI will Generate it for you):',
       },
     ]);
 
@@ -73,7 +73,7 @@ const main = async () => {
     const commitMessageFromAI = await getCommitMessage(diffInput);
 
     // Git Commit
-    executeCommand(`git commit -m "${commitMessageFromAI || commitMessage}"`);
+    executeCommand(`git commit -m "${commitMessageFromAI || commitMessage ? commitMessageFromAI || commitMessage : 'Jutsu-Git Commit'}"`);
     console.log(chalk.blue('Committed changes.'));
 
     // Git Push
