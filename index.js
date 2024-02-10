@@ -4,6 +4,7 @@ import figlet from 'figlet';
 import { execSync } from 'child_process';
 import inquirer from 'inquirer';
 import autocomplete from 'inquirer-autocomplete-prompt';
+import getCommitMessage from './Gemini.js';
 
 inquirer.registerPrompt('autocomplete', autocomplete);
 
@@ -68,8 +69,11 @@ const main = async () => {
     executeCommand('git add .');
     console.log(chalk.green('Added all changes for commit.'));
 
+    const diffInput = executeCommand('git diff --cached');
+    const commitMessageFromAI = await getCommitMessage(diffInput);
+
     // Git Commit
-    executeCommand(`git commit -m "${commitMessage}"`);
+    executeCommand(`git commit -m "${commitMessageFromAI || commitMessage}"`);
     console.log(chalk.blue('Committed changes.'));
 
     // Git Push

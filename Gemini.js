@@ -16,3 +16,4 @@ async function getCommitMessage(diffinput) {
   console.log(text);
 }
 
+export default getCommitMessage;
