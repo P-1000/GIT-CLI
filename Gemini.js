@@ -10,32 +10,21 @@ async function getCommitMessage(diffinput) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   const prompt = `
-  Write a commit message for the following changes:\n
-  ${diffinput}\n
-  Make it short and include the main changes and some technical details and references if needed, but keep it clear.\n\n
-  If you have added a new feature, you can write something like:\n
-  'Add new feature: [feature name]'\n\n
-  If you have fixed a bug, you can write something like:\n
-  'Fix bug: [bug name]'\n\n
-  If you have refactored some code, you can write something like:\n
-  'Refactor code: [refactor name]'\n\n
-  If you have updated some code, you can write something like:\n
-  'Update code: [update name]'\n\n
-  If you have deleted some code, you can write something like:\n
-  'Delete code: [delete name]'\n\n
-  If you have added some tests, you can write something like:\n
-  'Add tests: [test name]'\n\n
-  If you have updated some tests, you can write something like:\n
-  'Update tests: [test name]'\n\n
-  If you have deleted some tests, you can write something like:\n
-  'Delete tests: [test name]'\n\n
-  If you have updated the documentation, you can write something like:\n
-  'Update documentation: [documentation name]'\n\n
-  If you have fixed some documentation, you can write something like:\n
-  'Fix documentation: [documentation name]'\n\n
-  If you have updated a function, you can write something like:\n
-  'Update function: [function name]'
-`;
+    Write a commit message for the following changes:\n
+    ${diffinput}\n
+    Please make the commit message clear and concise, following these guidelines:\n
+    - Start with a brief summary describing the purpose of the commit.\n
+    - Provide additional details about the changes made and their context.\n
+    - Indicate the scope of the changes, such as which files or components were modified.\n
+    - If the commit is related to a specific issue or task, include a reference to it.\n
+    Example commit message:\n
+    "feat: Add user authentication functionality\n\n
+    - Implement user login and registration forms\n
+    - Integrate authentication middleware for protected routes\n
+    - Update user model with password hashing for security\n
+    Closes #123" \n
+    if you are not sure what to write , just update changes from jutsu-git\n
+  `;
 
   const result = await model.generateContent(prompt);
   const response = await result.response;
