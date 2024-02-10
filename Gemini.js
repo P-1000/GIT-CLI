@@ -20,7 +20,7 @@ async function getCommitMessage(diffinput) {
     - Implement user login and registration forms\n
     - Integrate authentication middleware for protected routes\n
     - Update user model with password hashing for security\n
-    Closes #123" \n
+    " \n
     if you are not sure what to write , just update changes from jutsu-git\n
   `;
 
@@ -32,6 +32,7 @@ async function getCommitMessage(diffinput) {
   console.log(" ");
   console.log(chalk.white(text));
   console.log(" ");
+  return text;
 }
 
 export default getCommitMessage;
