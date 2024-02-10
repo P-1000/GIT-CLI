@@ -1,4 +1,4 @@
-# jutsu-git
+# jutsu-git 
 
 <!-- ![jutsu-git Logo](jutsu-git-logo.png) -->
 
@@ -11,6 +11,7 @@ jutsu-git is a command-line tool that enhances your Git workflow with powerful "
 - Interactive prompts for commit message and branch name.
 - Seamless integration with your existing Git repositories.
 - Quick and convenient access to common Git tasks.
+- Ai powered commit message suggestions.
 
 ## Installation
 
