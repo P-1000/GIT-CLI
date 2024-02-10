@@ -14,14 +14,8 @@ async function getCommitMessage(diffinput) {
     - Start with a brief summary describing the purpose of the commit.\n
     - Provide additional details about the changes made and their context.\n
     - Indicate the scope of the changes, such as which files or components were modified.\n
-    - If the commit is related to a specific issue or task, include a reference to it.\n
-    Example commit message:\n
-    "feat: Add user authentication functionality\n\n
-    - Implement user login and registration forms\n
-    - Integrate authentication middleware for protected routes\n
-    - Update user model with password hashing for security\n
-    " \n
     if you are not sure what to write , just say this do not assume anything of yourself update changes from jutsu-git\n
+    and do not go out of the scope of the changes\n
   `;
 
   const result = await model.generateContent(prompt);
