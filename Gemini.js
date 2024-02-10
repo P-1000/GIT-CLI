@@ -1,8 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import chalk from "chalk";
 
-
-
 const API_KEY = "AIzaSyDkVHUDN95kPp9-yADpuxhGnB4scKTDcyw";
 const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -30,8 +28,10 @@ async function getCommitMessage(diffinput) {
   const response = await result.response;
   const text = response.text();
   console.log(" ");
-  console.log(chalk.bgBlack.white.bold(`AI Generated Commit Message:\n${text}`));
-    console.log(" ");
+  console.log(chalk.bgBlack.white.bold("AI Generated Commit Message:"));
+  console.log(" ");
+  console.log(chalk.white(text));
+  console.log(" ");
 }
 
 export default getCommitMessage;
