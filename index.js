@@ -73,8 +73,8 @@ const main = async () => {
     const commitMessageFromAI = await getCommitMessage(diffInput);
 
     // Git Commit
-    executeCommand(`git commit -m ${commitMessageFromAI}`);
-    console.log(chalk.blue('Committed changes.'));
+    const sanitizedCommitMessage = commitMessageFromAI.replace(/"/g, '\\"'); // Escape double quotes
+    executeCommand(`git commit -m "${sanitizedCommitMessage}"`);
 
     // Git Push
     executeCommand(`git push origin ${branch.slice(2)}`);
