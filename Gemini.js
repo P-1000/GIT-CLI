@@ -21,7 +21,7 @@ async function getCommitMessage(diffinput) {
     - Integrate authentication middleware for protected routes\n
     - Update user model with password hashing for security\n
     " \n
-    if you are not sure what to write , just update changes from jutsu-git\n
+    if you are not sure what to write , just say this do not assume anything of yourself update changes from jutsu-git\n
   `;
 
   const result = await model.generateContent(prompt);
