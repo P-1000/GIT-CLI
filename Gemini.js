@@ -35,3 +35,5 @@ async function getCommitMessage(diffinput) {
 }
 
 export default getCommitMessage;
+
+getCommitMessage("sample test")
