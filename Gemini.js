@@ -40,8 +40,7 @@ async function getCommitMessage(diffinput) {
   const result = await model.generateContent(prompt);
   const response = await result.response;
   const text = response.text();
-  const increaseFontSize = (text) => `\x1b[3m${text}\x1b[0m`; // Escape sequence for increasing font size
-  console.log(increaseFontSize(chalk.white.bold(`AI Generated Commit Message:\n${text}`)));
+  console.log(chalk.bgBlack.white.bold(`AI Generated Commit Message:\n${text}`));
 }
 
 export default getCommitMessage;
