@@ -16,6 +16,8 @@ async function getCommitMessage(diffinput) {
     - Indicate the scope of the changes, such as which files or components were modified.\n
     if you are not sure what to write , just say this do not assume anything of yourself update changes from jutsu-git\n
     and do not go out of the scope of the changes\n
+
+    do not write like refer to docs or something like that only write the changes that is it
   `;
 
   const result = await model.generateContent(prompt);
