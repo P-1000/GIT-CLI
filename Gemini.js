@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import chalk from "chalk";
 
-const API_KEY = "AIzaSyBzH7H-7EwRdK2ohKflYEvEDDhyS28DsnE";
+const API_KEY = "AIzaSyC87USL5qqP6hXtx1mLmEEeKIVKxsNBvs0";
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 async function getCommitMessage(diffinput) {
