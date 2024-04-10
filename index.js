@@ -57,8 +57,8 @@ const selectBranchAndCommit = async () => {
 };
 
 const main = async () => {
-  console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
 
+  console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
   try {
     displayModifiedFiles();
     const { branch, commitMessage } = await selectBranchAndCommit();

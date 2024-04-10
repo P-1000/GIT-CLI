@@ -1,7 +1,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import chalk from "chalk";
+import fs from 'fs';
+import { homedir } from 'os';
+import { execSync } from 'child_process';
 
-const API_KEY = "AIzaSyC87USL5qqP6hXtx1mLmEEeKIVKxsNBvs0";
+
+const apiKey = execSync('npm config get myapi').toString().trim();
+
+const API_KEY = apiKey
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 async function getCommitMessage(diffinput) {
@@ -32,5 +38,3 @@ async function getCommitMessage(diffinput) {
 }
 
 export default getCommitMessage;
-
-
