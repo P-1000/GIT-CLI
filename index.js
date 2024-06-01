@@ -18,7 +18,8 @@ const executeCommand = (command) => {
 
 const displayModifiedFiles = () => {
   try {
-    const modifiedFiles = executeCommand('git status --short')
+    const output = executeCommand('git status --short');
+    const modifiedFiles = output
       .split('\n')
       .filter((line) => line.startsWith(' M '))
       .map((line) => line.replace(' M ', ''))
@@ -32,7 +33,8 @@ const displayModifiedFiles = () => {
 
 const selectBranchAndCommit = async () => {
   try {
-    const branches = executeCommand('git branch --list')
+    const output = executeCommand('git branch --list');
+    const branches = output
       .split('\n')
       .map((branch) => branch.trim());
 
@@ -57,7 +59,6 @@ const selectBranchAndCommit = async () => {
 };
 
 const main = async () => {
-
   console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
   try {
     displayModifiedFiles();
@@ -83,6 +84,7 @@ const main = async () => {
     console.log(chalk.green('Done!'));
   } catch (error) {
     console.error(`${chalk.bgRed.white('Error executing script:')} ${error.message}`);
+    process.exitCode = 1; // Set non-zero exit code to indicate failure
   }
 };
 

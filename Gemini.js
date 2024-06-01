@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import chalk from "chalk";
-import fs from 'fs';
-import { homedir } from 'os';
+import fs from "fs";
+import { homedir } from "os";
 import inquirer from "inquirer";
 
 const API_KEY_FILE_PATH = `${homedir()}/.jutsu-git-apikey`;
@@ -10,26 +10,28 @@ const getApiKey = async () => {
   let apiKey;
   try {
     if (fs.existsSync(API_KEY_FILE_PATH)) {
-      apiKey = fs.readFileSync(API_KEY_FILE_PATH, 'utf-8').trim();
+      apiKey = fs.readFileSync(API_KEY_FILE_PATH, "utf-8").trim();
     }
     if (!apiKey) {
       const { apiKey: enteredApiKey } = await inquirer.prompt([
         {
-          type: 'input',
-          name: 'apiKey',
-          message: 'Enter your API key:',
-          validate: function(value) {
-            return value.trim().length !== 0 || 'API key cannot be empty';
-          }
-        }
+          type: "input",
+          name: "apiKey",
+          message: "Enter your API key:",
+          validate: function (value) {
+            return value.trim().length !== 0 || "API key cannot be empty";
+          },
+        },
       ]);
       apiKey = enteredApiKey.trim();
       fs.writeFileSync(API_KEY_FILE_PATH, apiKey);
-      console.log(chalk.green('API key saved successfully.'));
+      console.log(chalk.green("API key saved successfully."));
     }
     return apiKey;
   } catch (error) {
-    console.error(chalk.red(`Error retrieving or saving API key: ${error.message}`));
+    console.error(
+      chalk.red(`Error retrieving or saving API key: ${error.message}`)
+    );
     process.exit(1);
   }
 };
@@ -54,7 +56,7 @@ async function getCommitMessage(diffinput) {
   
       do not write like refer to docs or something like that only write the changes that is it
     `;
-  
+
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
@@ -65,8 +67,10 @@ async function getCommitMessage(diffinput) {
     console.log(" ");
     return text;
   } catch (error) {
-    console.error(chalk.red(`Error generating commit message: ${error.message}`));
-    return null; // Return null or handle the error as per your requirement
+    console.error(
+      chalk.red(`Error generating commit message: ${error.message}`)
+    );
+    return null; 
   }
 }
 
