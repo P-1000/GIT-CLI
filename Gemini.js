@@ -4,11 +4,30 @@ import fs from 'fs';
 import { homedir } from 'os';
 import { execSync } from 'child_process';
 
+const API_KEY_FILE_PATH = `${homedir()}/.jutsu-git-apikey`;
 
-const apiKey = execSync('npm config get myapi').toString().trim();
+const getApiKey = () => {
+  try {
+    // Check if API key exists in file
+    if (fs.existsSync(API_KEY_FILE_PATH)) {
+      return fs.readFileSync(API_KEY_FILE_PATH, 'utf-8').trim();
+    } else {
+      // If API key doesn't exist, retrieve it from npm config
+      const apiKey = execSync('npm config get myapi').toString().trim();
+      
+      // Save API key to file for later use
+      fs.writeFileSync(API_KEY_FILE_PATH, apiKey);
+      console.log(chalk.green('API key saved successfully.'));
 
-const API_KEY = apiKey
-const genAI = new GoogleGenerativeAI(API_KEY);
+      return apiKey;
+    }
+  } catch (error) {
+    console.error(chalk.red(`Error retrieving API key: ${error.message}`));
+    process.exit(1);
+  }
+};
+
+const genAI = new GoogleGenerativeAI(getApiKey());
 
 async function getCommitMessage(diffinput) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
