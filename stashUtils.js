@@ -1,16 +1,8 @@
 import chalk from 'chalk';
-import { execSync } from 'child_process';
+import { executeCommand } from './gitUtils.js';
 import inquirer from 'inquirer';
 
-const executeCommand = (command) => {
-  try {
-    return execSync(command, { stdio: 'pipe', encoding: 'utf-8' }).trim();
-  } catch (error) {
-    throw new Error(`Error executing command "${command}": ${error.message}`);
-  }
-};
-
-const listStashes = () => {
+export const listStashes = () => {
   try {
     const output = executeCommand('git stash list');
     if (output) {
@@ -24,7 +16,7 @@ const listStashes = () => {
   }
 };
 
-const applyStash = async () => {
+export const applyStash = async () => {
   try {
     const stashes = executeCommand('git stash list').split('\n');
     const { stashIndex } = await inquirer.prompt([
@@ -42,7 +34,7 @@ const applyStash = async () => {
   }
 };
 
-const dropStash = async () => {
+export const dropStash = async () => {
   try {
     const stashes = executeCommand('git stash list').split('\n');
     const { stashIndex } = await inquirer.prompt([
@@ -59,5 +51,3 @@ const dropStash = async () => {
     console.error(chalk.red.bold('Error dropping stash:'), error.message);
   }
 };
-
-export { listStashes, applyStash, dropStash };
