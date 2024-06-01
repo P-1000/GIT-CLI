@@ -1,6 +1,6 @@
 {
   "name": "jutsu-git",
-  "version": "3.0.0",
+  "version": "3.2.2",
   "description": "A CLI tool to automate the process of creating a new git repository and pushing it to GitHub. : its for me : ",
   "main": "index.js",
   "type": "module",

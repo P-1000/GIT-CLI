@@ -1,14 +1,10 @@
 # jutsu-git 
 
-<!-- ![jutsu-git Logo](jutsu-git-logo.png) -->
-
 jutsu-git is a command-line tool that enhances your Git workflow with powerful "jutsu" (techniques). It provides simplified commands and automations to make your Git experience more efficient and enjoyable.
 
 ## config
- -- Set the Gemini API key for commit message suggestions.
- -- run `npm config edit` to set the API key.
- -- Add the following line to the config file:
-    `myapi=API_KEY`
+ -- Get the Gemini API key from ai.google.dev
+ -- input the key when prompted
 
 
 ## Features
@@ -26,3 +22,10 @@ To install jutsu-git, use npm:
 
 ```bash
 npm install -g jutsu-git
+
+# or
+    npx jutsu-git
+```
+
+## note
+- set alias for jutsu-git of your choice.
