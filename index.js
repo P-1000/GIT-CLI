@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import chalk from "chalk";
 import figlet from "figlet";
 import {
@@ -10,6 +9,11 @@ import { execSync } from "child_process";
 import { detectPrivateKeys } from "./private-key-detect.js";
 import inquirer from "inquirer";
 
+/**
+ * @returns {Promise<boolean>} - Returns true if sensitive information is found, false otherwise.
+ * @description Checks for sensitive information in the modified files.
+ * If sensitive information is found, the user is prompted to proceed with the commit.
+ */
 const checkForSensitiveInfo = async () => {
   try {
     const changedFiles = execSync("git diff --name-only", {
@@ -41,7 +45,7 @@ const checkForSensitiveInfo = async () => {
         }
 
         console.log(chalk.yellow("Proceeding with commit at user's risk."));
-        hasSensitiveInfo = true; // Considered as sensitive info found, but user decided to proceed
+        hasSensitiveInfo = true;
       }
     }
 
@@ -67,8 +71,8 @@ const main = async () => {
   try {
     displayModifiedFiles();
 
-    console.log(chalk.bgBlueBright("Checking for sensitive information..."));
-
+    console.log(chalk.bgWhiteBright("Checking for sensitive information..."));
+    console.log("");
     if (await checkForSensitiveInfo()) {
       process.exitCode = 1;
       return;
@@ -86,16 +90,6 @@ const main = async () => {
     process.exitCode = 1;
   }
 };
-
-if (!process.env.PRIVATE_KEY) {
-  console.error(chalk.red("Private key not found in environment variables."));
-  process.exitCode = 1;
-}
-
-
-const apiKey = 'my_api_key';
-const privateKey = process.env.PRIVATE_KEY;
-const password = 'my_password';
 
 
 main();

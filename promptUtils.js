@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 
+
 export const promptBranchAndCommit = async (branches) => {
   try {
     const { branch, commitMessage } = await inquirer.prompt([

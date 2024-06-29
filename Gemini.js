@@ -6,6 +6,8 @@ import inquirer from "inquirer";
 
 const API_KEY_FILE_PATH = `${homedir()}/.jutsu-git-apikey`;
 
+
+// init for gemini api
 const getApiKey = async () => {
   let apiKey;
   try {
@@ -39,6 +41,15 @@ const getApiKey = async () => {
 const apiKey = await getApiKey();
 
 const genAI = new GoogleGenerativeAI(apiKey);
+
+
+/**
+ * Generates a commit message based on the changes made.
+ * @param {string} diffinput - The diff input from the changes made.
+ * @returns {Promise<string>} - The generated commit message.
+ * @description This function generates a commit message based on the changes made. by the user.
+ */
+
 
 async function getCommitMessage(diffinput) {
   try {

@@ -1,7 +1,11 @@
 import { readFileSync } from "fs";
 import hljs from "cli-highlight";
+import chalk from "chalk";
 
-// List of patterns to detect private keys in a JavaScript file
+/**
+ * Patterns to match private keys in a JavaScript file.
+ */
+
 const PRIVATE_KEY_PATTERNS = [
   /api[_-]?key\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
   /private[_-]?key\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
@@ -27,6 +31,7 @@ export const detectPrivateKeys = (filePath) => {
       PRIVATE_KEY_PATTERNS.forEach((pattern) => {
         if (pattern.test(line)) {
           hasPrivateKeys = true;
+          console.log(chalk.red(`Private key pattern found in line ${index + 1} of ${filePath}:`));
         }
       });
     });
