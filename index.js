@@ -11,11 +11,8 @@ import { detectPrivateKeys } from "./private-key-detect.js";
 import inquirer from "inquirer";
 
 const checkForSensitiveInfo = async () => {
-  console.log(
-    chalk.yellow("Checking for sensitive information in staged files...")
-  );
   try {
-    const changedFiles = execSync("git diff --cached --name-only", {
+    const changedFiles = execSync("git diff --name-only", {
       stdio: "pipe",
       encoding: "utf-8",
     }).trim();
@@ -29,9 +26,8 @@ const checkForSensitiveInfo = async () => {
     let hasSensitiveInfo = false;
 
     for (const file of files) {
-      if (detectPrivateKeys(file)) {
-        console.log(chalk.red(`Private key detected in ${file}.`));
-
+      if (await detectPrivateKeys(file)) {
+        console.log(chalk.bgRedBright(`Private key detected in ${file}.`));
         const answer = await inquirer.prompt({
           type: "confirm",
           name: "proceed",
@@ -71,6 +67,8 @@ const main = async () => {
   try {
     displayModifiedFiles();
 
+    console.log(chalk.bgBlueBright("Checking for sensitive information..."));
+
     if (await checkForSensitiveInfo()) {
       process.exitCode = 1;
       return;
@@ -89,8 +87,15 @@ const main = async () => {
   }
 };
 
-const apiKey = "my_api_key";
+if (!process.env.PRIVATE_KEY) {
+  console.error(chalk.red("Private key not found in environment variables."));
+  process.exitCode = 1;
+}
+
+
+const apiKey = 'my_api_key';
 const privateKey = process.env.PRIVATE_KEY;
-const password = "my_password";
+const password = 'my_password';
+
 
 main();
