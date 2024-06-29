@@ -5,15 +5,16 @@ import { displayModifiedFiles, selectBranchAndCommit, executeCommitWorkflow } fr
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import hljs from "cli-highlight";
+import inquirer from 'inquirer';
 
 // Sensitive information patterns
 const SENSITIVE_PATTERNS = [
-  /api[_-]?key\s*[:=]\s*[\'"][^\'"]+[\'"]/gi, // API keys
-  /private[_-]?key\s*[:=]\s*[\'"][^\'"]+[\'"]/gi, // Private keys
-  /password\s*[:=]\s*[\'"][^\'"]+[\'"]/gi, // Passwords
-  /secret\s*[:=]\s*[\'"][^\'"]+[\'"]/gi, // Secrets
-  /access[_-]?token\s*[:=]\s*[\'"][^\'"]+[\'"]/gi, // Access tokens
-  /-----BEGIN (RSA|DSA|EC|PGP|OPENSSH) PRIVATE KEY-----/g, // Private key blocks
+  /api[_-]?key\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
+  /private[_-]?key\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
+  /password\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
+  /secret\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
+  /access[_-]?token\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
+  /-----BEGIN (RSA|DSA|EC|PGP|OPENSSH) PRIVATE KEY-----/g,
 ];
 
 const checkSensitiveInfo = (filePath) => {
@@ -42,7 +43,7 @@ const checkSensitiveInfo = (filePath) => {
   }
 };
 
-const checkForSensitiveInfo = () => {
+const checkForSensitiveInfo = async () => {
   try {
     const changedFiles = execSync("git diff --cached --name-only", {
       stdio: "pipe",
@@ -57,19 +58,29 @@ const checkForSensitiveInfo = () => {
     const files = changedFiles.split("\n");
     let hasSensitiveInfo = false;
 
-    files.forEach((file) => {
+    for (const file of files) {
       if (checkSensitiveInfo(file)) {
         hasSensitiveInfo = true;
       }
-    });
+    }
 
     if (hasSensitiveInfo) {
-      console.log(chalk.red("Commit aborted due to sensitive information."));
-      return true;
-    } else {
-      console.log(chalk.green("No sensitive information found."));
-      return false;
+      console.log(chalk.red("Sensitive information detected."));
+      const { proceed } = await inquirer.prompt({
+        type: 'confirm',
+        name: 'proceed',
+        message: 'Sensitive information found. Do you want to proceed with the commit at your own risk?',
+        default: false,
+      });
+
+      if (!proceed) {
+        console.log(chalk.red("Commit aborted due to sensitive information."));
+        return true;
+      }
     }
+
+    console.log(chalk.green("No sensitive information found or proceeding at user's risk."));
+    return false;
   } catch (error) {
     console.error(chalk.red(`Error executing script: ${error.message}`));
     return true;
@@ -81,8 +92,7 @@ const main = async () => {
   try {
     displayModifiedFiles();
 
-    // Check for sensitive information
-    if (checkForSensitiveInfo()) {
+    if (await checkForSensitiveInfo()) {
       process.exitCode = 1;
       return;
     }
@@ -98,5 +108,4 @@ const main = async () => {
   }
 };
 
-const api = "hasdlfh"
 main();
