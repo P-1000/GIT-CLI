@@ -67,8 +67,8 @@ async function getCommitMessage(diffinput) {
     console.log(" ");
     return text;
   } catch (error) {
-    console.log(chalk.red("default commit message : "))
-    return "Update changes from jutsu-git"
+    console.log(chalk.red("default commit message : "));
+    return "Update changes from jutsu-git";
   }
 }
 

@@ -1,13 +1,19 @@
 #!/usr/bin/env node
-import chalk from 'chalk';
-import figlet from 'figlet';
-import { displayModifiedFiles, selectBranchAndCommit, executeCommitWorkflow } from './commitUtils.js';
+import chalk from "chalk";
+import figlet from "figlet";
+import {
+  displayModifiedFiles,
+  selectBranchAndCommit,
+  executeCommitWorkflow,
+} from "./commitUtils.js";
 import { execSync } from "child_process";
 import { detectPrivateKeys } from "./private-key-detect.js";
-import inquirer from 'inquirer';
+import inquirer from "inquirer";
 
-const checkForSensitiveInfo = async() => {
-  console.log(chalk.yellow("Checking for sensitive information in staged files..."));
+const checkForSensitiveInfo = async () => {
+  console.log(
+    chalk.yellow("Checking for sensitive information in staged files...")
+  );
   try {
     const changedFiles = execSync("git diff --cached --name-only", {
       stdio: "pipe",
@@ -27,8 +33,8 @@ const checkForSensitiveInfo = async() => {
         console.log(chalk.red(`Private key detected in ${file}.`));
 
         const answer = await inquirer.prompt({
-          type: 'confirm',
-          name: 'proceed',
+          type: "confirm",
+          name: "proceed",
           message: `Private key detected in ${file}. Do you want to proceed with the commit at your own risk?`,
           default: false,
         });
@@ -44,7 +50,9 @@ const checkForSensitiveInfo = async() => {
     }
 
     if (hasSensitiveInfo) {
-      console.log(chalk.yellow("Committing changes with sensitive information."));
+      console.log(
+        chalk.yellow("Committing changes with sensitive information.")
+      );
     } else {
       console.log(chalk.green("No sensitive information found."));
     }
@@ -57,7 +65,9 @@ const checkForSensitiveInfo = async() => {
 };
 
 const main = async () => {
-  console.log(chalk.green(figlet.textSync('Jutsu-Git', { horizontalLayout: 'full' })));
+  console.log(
+    chalk.green(figlet.textSync("Jutsu-Git", { horizontalLayout: "full" }))
+  );
   try {
     displayModifiedFiles();
 
@@ -70,17 +80,17 @@ const main = async () => {
     console.log(chalk.yellow(`Branch selected: ${branch}`));
     console.log(chalk.yellow(`Commit message: ${commitMessage}`));
     await executeCommitWorkflow(branch, commitMessage);
-    console.log(chalk.green('Done!'));
+    console.log(chalk.green("Done!"));
   } catch (error) {
-    console.error(`${chalk.bgRed.white('Error executing script:')} ${error.message}`);
+    console.error(
+      `${chalk.bgRed.white("Error executing script:")} ${error.message}`
+    );
     process.exitCode = 1;
   }
 };
 
-
-const apiKey = 'my_api_key';
+const apiKey = "my_api_key";
 const privateKey = process.env.PRIVATE_KEY;
-const password = 'my_password';
-
+const password = "my_password";
 
 main();
