@@ -40,7 +40,6 @@ const main = async () => {
   try {
     displayModifiedFiles();
 
-    // Check for sensitive information
     if (checkForSensitiveInfo()) {
       process.exitCode = 1;
       return;

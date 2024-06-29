@@ -17,6 +17,7 @@ const PRIVATE_KEY_PATTERNS = [
  * @returns {boolean} - Returns true if private keys are found, false otherwise.
  */
 export const detectPrivateKeys = (filePath) => {
+  console.log(`Checking file: ${filePath}`)
   try {
     const fileContent = readFileSync(filePath, "utf-8");
     const lines = fileContent.split("\n");
