@@ -4,9 +4,8 @@ import figlet from 'figlet';
 import { displayModifiedFiles, selectBranchAndCommit, executeCommitWorkflow } from './commitUtils.js';
 import { execSync } from "child_process";
 import { detectPrivateKeys } from "./private-key-detect.js";
-import inquirer from 'inquirer';
 
-const checkForSensitiveInfo = async () => {
+const checkForSensitiveInfo = () => {
   try {
     const changedFiles = execSync("git diff --cached --name-only", {
       stdio: "pipe",
@@ -23,30 +22,12 @@ const checkForSensitiveInfo = async () => {
 
     for (const file of files) {
       if (detectPrivateKeys(file)) {
-        // Ask user whether to proceed with commit or not
-        const answer = await inquirer.prompt({
-          type: 'confirm',
-          name: 'proceed',
-          message: `Private key detected in ${file}. Do you want to proceed with the commit at your own risk?`,
-          default: false,
-        });
-
-        if (!answer.proceed) {
-          console.log(chalk.red("Commit aborted."));
-          return true;
-        }
-
-        console.log(chalk.yellow("Proceeding with commit at user's risk."));
-        hasSensitiveInfo = true; // Considered as sensitive info found, but user decided to proceed
+        console.log(chalk.red(`Private key detected in ${file}. Commit aborted.`));
+        return true;
       }
     }
 
-    if (hasSensitiveInfo) {
-      console.log(chalk.yellow("Committing changes with sensitive information."));
-    } else {
-      console.log(chalk.green("No sensitive information found."));
-    }
-
+    console.log(chalk.green("No sensitive information found."));
     return false;
   } catch (error) {
     console.error(chalk.red(`Error executing script: ${error.message}`));
@@ -60,7 +41,7 @@ const main = async () => {
     displayModifiedFiles();
 
     // Check for sensitive information
-    if (await checkForSensitiveInfo()) {
+    if (checkForSensitiveInfo()) {
       process.exitCode = 1;
       return;
     }
