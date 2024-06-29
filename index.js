@@ -3,45 +3,8 @@ import chalk from 'chalk';
 import figlet from 'figlet';
 import { displayModifiedFiles, selectBranchAndCommit, executeCommitWorkflow } from './commitUtils.js';
 import { execSync } from "child_process";
-import { readFileSync } from "fs";
-import hljs from "cli-highlight";
+import { detectPrivateKeys } from "./private-key-detect.js";
 import inquirer from 'inquirer';
-
-// Sensitive information patterns
-const SENSITIVE_PATTERNS = [
-  /api[_-]?key\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
-  /private[_-]?key\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
-  /password\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
-  /secret\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
-  /access[_-]?token\s*[:=]\s*[\'"][^\'"]+[\'"]/gi,
-  /-----BEGIN (RSA|DSA|EC|PGP|OPENSSH) PRIVATE KEY-----/g,
-];
-
-const checkSensitiveInfo = (filePath) => {
-  try {
-    const fileContent = readFileSync(filePath, "utf-8");
-    const lines = fileContent.split("\n");
-    let hasSensitiveInfo = false;
-
-    lines.forEach((line, index) => {
-      SENSITIVE_PATTERNS.forEach((pattern) => {
-        if (pattern.test(line)) {
-          if (!hasSensitiveInfo) {
-            console.log(chalk.red(`Sensitive information found in ${filePath}:`));
-            hasSensitiveInfo = true;
-          }
-          const highlightedLine = hljs.highlight(line, { language: 'javascript' });
-          console.log(chalk.yellow(`Line ${index + 1}: ${highlightedLine}`));
-        }
-      });
-    });
-
-    return hasSensitiveInfo;
-  } catch (error) {
-    console.error(chalk.red(`Error reading file ${filePath}: ${error.message}`));
-    return false;
-  }
-};
 
 const checkForSensitiveInfo = async () => {
   try {
@@ -59,27 +22,31 @@ const checkForSensitiveInfo = async () => {
     let hasSensitiveInfo = false;
 
     for (const file of files) {
-      if (checkSensitiveInfo(file)) {
-        hasSensitiveInfo = true;
+      if (detectPrivateKeys(file)) {
+        // Ask user whether to proceed with commit or not
+        const answer = await inquirer.prompt({
+          type: 'confirm',
+          name: 'proceed',
+          message: `Private key detected in ${file}. Do you want to proceed with the commit at your own risk?`,
+          default: false,
+        });
+
+        if (!answer.proceed) {
+          console.log(chalk.red("Commit aborted."));
+          return true;
+        }
+
+        console.log(chalk.yellow("Proceeding with commit at user's risk."));
+        hasSensitiveInfo = true; // Considered as sensitive info found, but user decided to proceed
       }
     }
 
     if (hasSensitiveInfo) {
-      console.log(chalk.red("Sensitive information detected."));
-      const { proceed } = await inquirer.prompt({
-        type: 'confirm',
-        name: 'proceed',
-        message: 'Sensitive information found. Do you want to proceed with the commit at your own risk?',
-        default: false,
-      });
-
-      if (!proceed) {
-        console.log(chalk.red("Commit aborted due to sensitive information."));
-        return true;
-      }
+      console.log(chalk.yellow("Committing changes with sensitive information."));
+    } else {
+      console.log(chalk.green("No sensitive information found."));
     }
 
-    console.log(chalk.green("No sensitive information found or proceeding at user's risk."));
     return false;
   } catch (error) {
     console.error(chalk.red(`Error executing script: ${error.message}`));
@@ -92,6 +59,7 @@ const main = async () => {
   try {
     displayModifiedFiles();
 
+    // Check for sensitive information
     if (await checkForSensitiveInfo()) {
       process.exitCode = 1;
       return;
