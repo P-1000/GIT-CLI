@@ -4,8 +4,10 @@ import figlet from 'figlet';
 import { displayModifiedFiles, selectBranchAndCommit, executeCommitWorkflow } from './commitUtils.js';
 import { execSync } from "child_process";
 import { detectPrivateKeys } from "./private-key-detect.js";
+import inquirer from 'inquirer';
 
-const checkForSensitiveInfo = () => {
+const checkForSensitiveInfo = async() => {
+  console.log(chalk.yellow("Checking for sensitive information in staged files..."));
   try {
     const changedFiles = execSync("git diff --cached --name-only", {
       stdio: "pipe",
@@ -22,12 +24,31 @@ const checkForSensitiveInfo = () => {
 
     for (const file of files) {
       if (detectPrivateKeys(file)) {
-        console.log(chalk.red(`Private key detected in ${file}. Commit aborted.`));
-        return true;
+        console.log(chalk.red(`Private key detected in ${file}.`));
+
+        const answer = await inquirer.prompt({
+          type: 'confirm',
+          name: 'proceed',
+          message: `Private key detected in ${file}. Do you want to proceed with the commit at your own risk?`,
+          default: false,
+        });
+
+        if (!answer.proceed) {
+          console.log(chalk.red("Commit aborted."));
+          return true;
+        }
+
+        console.log(chalk.yellow("Proceeding with commit at user's risk."));
+        hasSensitiveInfo = true; // Considered as sensitive info found, but user decided to proceed
       }
     }
 
-    console.log(chalk.green("No sensitive information found."));
+    if (hasSensitiveInfo) {
+      console.log(chalk.yellow("Committing changes with sensitive information."));
+    } else {
+      console.log(chalk.green("No sensitive information found."));
+    }
+
     return false;
   } catch (error) {
     console.error(chalk.red(`Error executing script: ${error.message}`));
@@ -40,7 +61,7 @@ const main = async () => {
   try {
     displayModifiedFiles();
 
-    if (checkForSensitiveInfo()) {
+    if (await checkForSensitiveInfo()) {
       process.exitCode = 1;
       return;
     }
@@ -55,5 +76,11 @@ const main = async () => {
     process.exitCode = 1;
   }
 };
+
+
+const apiKey = 'my_api_key';
+const privateKey = process.env.PRIVATE_KEY;
+const password = 'my_password';
+
 
 main();
