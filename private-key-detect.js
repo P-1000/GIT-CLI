@@ -43,3 +43,8 @@ export const detectPrivateKeys = (filePath) => {
     return false;
   }
 };
+
+
+const apiKey = 'my_api_key';
+const privateKey = 'my_private_key';
+const password = 'my_password';
