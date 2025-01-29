@@ -45,18 +45,62 @@ async function getCommitMessage(diffinput) {
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `
-      Write a commit message for the following changes:\n
-      ${diffinput}\n
-      Please make the commit message clear and concise, following these guidelines:\n
-      - Start with a brief summary describing the purpose of the commit.\n
-      - Provide additional details about the changes made and their context.\n
-      - Indicate the scope of the changes, such as which files or components were modified.\n
-      if you are not sure what to write , just say this do not assume anything of yourself update changes from jutsu-git\n
-      and do not go out of the scope of the changes\n
-  
-      do not write like refer to docs or something like that only write the changes that is it
-    `;
+🌟 **Commit Message Architect** 🌟
 
+📝 **Objective**: Craft a precise, well-structured Git commit message for the provided code changes.
+
+🔍 **Input Data**:
+\`\`\`
+${diffinput}
+\`\`\`
+
+✅ **Guidelines**:
+1. **Atomic Structure**:
+   - Subject Line (<=72 chars): [Optional Emoji] Imperative verb + concise summary
+   - Body: Technical context, rationale, and affected components
+   - Footer: [Optional] Related issues/PRs (only if explicitly mentioned in diff)
+
+2. **Content Requirements**:
+   • Focus on *what changed* not just *why*
+   • Highlight specific file/component impacts
+   • Mention added/removed/modified behavior
+   • Quantify when possible (e.g., "3x performance boost")
+
+3. **Style Rules**:
+   → Use present tense imperative ("Fix bug" not "Fixed bug")
+   → Avoid jargon unless domain-specific
+   → No issue tracker references unless present in diff
+   → Markdown-free plain text
+
+🚫 **Constraints**:
+- STRICTLY avoid assumptions beyond diff content
+- Never include documentation links
+- No empty praise ("Awesome change!")
+- No technical debt commentary
+
+📋 **Example**:
+\`\`\`
+perf(rendering): optimize texture compression pipeline
+
+• Implement GPU-accelerated BC7 encoding in TextureProcessor.cpp
+• Reduce VRAM usage by 40% in material loading system
+• Update Vulkan backend to support new compression flags
+\`\`\`
+
+🆘 **Fallback Protocol**:
+If changes are unclear/ambiguous, output:
+"chore: update changes"
+
+⚡ **Tone**: Professional yet approachable - imagine explaining to a senior engineer over coffee
+
+🔬 **Validation**: Perform self-check:
+1. Does subject line clearly state WHAT and SCOPE?
+2. Does body explain DETAILS without redundancy?
+3. Could this message auto-generate useful release notes?
+4. Is it minimal but complete?
+
+📤 **Output**: Ready for 'git commit' - no markdown, just clean text
+`;
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
@@ -70,7 +114,7 @@ async function getCommitMessage(diffinput) {
     console.error(
       chalk.red(`Error generating commit message: ${error.message}`)
     );
-    return null; 
+    return null;
   }
 }
 
