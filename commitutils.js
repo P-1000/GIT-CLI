@@ -24,8 +24,8 @@ export const selectBranchAndCommit = async () => {
 };
 
 export const executeCommitWorkflow = async (branch, commitMessage) => {
-  executeCommand('git add .');
-  console.log(chalk.green('Added all changes for commit.'));
+  // executeCommand('git add .');
+  // console.log(chalk.green('Added all changes for commit.'));
   const diffInput = executeCommand('git diff --cached');
   const commitMessageFromAI = await getCommitMessage(diffInput);
   const sanitizedCommitMessage = commitMessageFromAI.replace(/"/g, '\\"');
